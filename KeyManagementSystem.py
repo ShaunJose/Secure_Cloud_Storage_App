@@ -5,6 +5,8 @@
 import os
 from constants import SHARED_KEY_FILE
 from constants import FOLDER_NAME
+from FileFunctionalities import readFile
+from FileFunctionalities import saveFile
 from cryptography.fernet import Fernet
 
 
@@ -26,8 +28,7 @@ class KMS:
 
         # read key if key exists else generate a new one
         if os.path.exists(SHARED_KEY_FILE):
-            fileIn = open(SHARED_KEY_FILE, "r")
-            self.key = fileIn.read()
+            self.key = readFile(SHARED_KEY_FILE)
             self.fernet = Fernet(self.key) # create fernet obj
         else:
             self.__generate_new_key__()
@@ -49,9 +50,7 @@ class KMS:
             os.mkdir(FOLDER_NAME)
 
         # save key to appropriate file in directory
-        fileOut = open(SHARED_KEY_FILE, "w")
-        fileOut.write(self.key)
-        fileOut.close()
+        saveFile(SHARED_KEY_FILE, self.key)
 
         # create fernet object
         self.fernet = Fernet(self.key) # create fernet obj

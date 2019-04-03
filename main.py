@@ -14,11 +14,11 @@ if __name__ == "__main__":
     tmp = KMS()
     print(tmp.getKey())
 
-    filename = FileSharing.upload_file("test file 1.jpg", tmp.fernet)
-    print("\n\nEncrypted version in: " + filename)
-
-    filename = FileSharing.upload_file("test file 2.txt", tmp.fernet)
-    print("Encrypted version in: " + filename)
+    # filename = FileSharing.upload_file("test file 1.jpg", tmp.fernet)
+    # print("\n\nEncrypted version in: " + filename)
+    #
+    # filename = FileSharing.upload_file("test file 2.txt", tmp.fernet)
+    # print("Encrypted version in: " + filename)
 
     filename = FileSharing.download_file("test file 1.jpg", tmp.fernet)
     print("\n\nDecrypted version in: " + filename)

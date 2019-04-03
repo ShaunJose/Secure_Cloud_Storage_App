@@ -4,6 +4,8 @@
 # Imports
 import os
 from constants import ENCR_EXTENSION
+from FileFunctionalities import readFile
+from FileFunctionalities import saveFile
 
 
 # Uploads a file after encrypting it
@@ -21,19 +23,15 @@ def upload_file(filename, fernet):
     if not os.path.exists(filename):
         return None
 
-    # Read file
-    fileIn = open(filename, "r")
-    plain_text = fileIn.read()
-    fileIn.close()
+    # Get file contents
+    plain_text = readFile(filename)
 
     # Get encrypted file data
     cipher_text = _encrypt(plain_text, fernet)
 
     # Save file locally
     EncryptedFilename = filename + ENCR_EXTENSION
-    fileOut = open(EncryptedFilename, "w")
-    fileOut.write(cipher_text)
-    fileOut.close()
+    saveFile(EncryptedFilename, cipher_text)
 
     # TODO: upload file to google drive
 
@@ -76,10 +74,8 @@ def download_file(filename, fernet):
 
     # TODO: download file from google drive
 
-    # Read file
-    fileIn = open(filename, "r")
-    cipher_text = fileIn.read()
-    fileIn.close()
+    # Get file contents
+    cipher_text = readFile(filename)
 
     # TODO: maybe delete downloaded encrypted version of the file here.
 
@@ -88,9 +84,7 @@ def download_file(filename, fernet):
 
     # Save decrypted data here
     DecryptedFileName = filename[ : -len(ENCR_EXTENSION)]
-    fileOut = open(DecryptedFileName, "w")
-    fileOut.write(plain_text)
-    fileOut.close()
+    saveFile(DecryptedFileName, plain_text)
 
     # TODO: maybe open file over here or from caller method
     # NOTE: Filename wont have encrpyt extension
