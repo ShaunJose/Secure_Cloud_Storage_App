@@ -1,6 +1,9 @@
 # author: ShaunJose (@Github)
 # File description: Contains methods for file sharing
 
+# Imports
+import os
+
 # Uploads file after encrypting it
 def upload_file(filename, fernet):
     """
@@ -12,6 +15,7 @@ def upload_file(filename, fernet):
     return: Filename of encrypted file, if file uploaded successfully, else None
     """
 
+    # if 
     # TODO: encrypt file
 
     # TODO: upload file to google drive

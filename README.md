@@ -5,6 +5,13 @@
 ### Description
 An implementation of a secure cloud storage application for Google drive
 
+
+### Run
+```
+python main.py
+```
+
+
 ### Dependencies
 1. cryptography
 ```
