@@ -1,4 +1,5 @@
-# author: ShaunJose (github username)
+# author: ShaunJose (@Github)
+# File description: Contains the KeyManagementSystem class
 
 # Imports
 import os
@@ -11,12 +12,11 @@ class KMS:
 
     # Constructor
     def __init__(self):
-        self.__init_key__() # initialise self.key
-        self.f = Fernet(self.key) # create fernet obj
+        self.__init_key_fernet__() # initialise self.key and self.fernet
 
 
-    # Initialises a new key and fernet if it doesn't exist
-    def __init_key__(self):
+    # Initialises a new key if it doesn't exist
+    def __init_key_fernet__(self):
         """
         Initialises a new key if it doesn't exist
 
@@ -27,6 +27,7 @@ class KMS:
         if os.path.exists(constants.SHARED_KEY_FILE):
             fileIn = open(constants.SHARED_KEY_FILE, "r")
             self.key = fileIn.read()
+            self.fernet = Fernet(self.key) # create fernet obj
         else:
             self.__generate_new_key__()
 
@@ -34,9 +35,9 @@ class KMS:
     # Generate and save a key
     def __generate_new_key__(self):
         """
-            Generates a new key and saves it to the file
+        Generates a new key (and fernet obj) and saves it to the file
 
-            return: None
+        return: None
         """
 
         # generate a key
@@ -50,6 +51,9 @@ class KMS:
         fileOut = open(constants.SHARED_KEY_FILE, "w")
         fileOut.write(self.key)
         fileOut.close()
+
+        # create fernet object
+        self.fernet = Fernet(self.key) # create fernet obj
 
         # TODO: broadcast the new key to everyone (here or in group handler class?)
 
