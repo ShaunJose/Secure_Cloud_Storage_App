@@ -3,4 +3,10 @@
 ### Note - In progress
 
 ### Description
-An implementation of a secure cloud storage application for Dropbox, Google drive etc
+An implementation of a secure cloud storage application for Google drive
+
+### Dependencies
+1. cryptography
+```
+pip install cryptography
+```
