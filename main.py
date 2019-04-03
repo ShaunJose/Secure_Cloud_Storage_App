@@ -10,12 +10,18 @@ import FileSharing
 if __name__ == "__main__":
     # TODO: call method to accept user input here
 
-    # TODO: move this code to method described above
+    # TODO: move all this code (even below it) to appropriate place
     tmp = KMS()
     print(tmp.getKey())
 
-    # TODO: get rid of this temp code
-    encr = (FileSharing._encrypt("Test text", tmp.fernet))
-    print(encr)
-    decr = (FileSharing._decrypt(encr, tmp.fernet))
-    print(decr)
+    filename = FileSharing.upload_file("test file 1.jpg", tmp.fernet)
+    print("\n\nEncrypted version in: " + filename)
+
+    filename = FileSharing.upload_file("test file 2.txt", tmp.fernet)
+    print("Encrypted version in: " + filename)
+
+    filename = FileSharing.download_file("test file 1.jpg", tmp.fernet)
+    print("\n\nDecrypted version in: " + filename)
+
+    filename = FileSharing.download_file("test file 2.txt.encrypt", tmp.fernet)
+    print("Decrypted version in: " + filename)
