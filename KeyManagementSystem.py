@@ -11,11 +11,11 @@ class KMS:
 
     # Constructor
     def __init__(self):
-        self.__init_key__()
-        print(self.key)
+        self.__init_key__() # initialise self.key
+        self.f = Fernet(self.key) # create fernet obj
 
 
-    # Initialises a new key if it doesn't exist
+    # Initialises a new key and fernet if it doesn't exist
     def __init_key__(self):
         """
         Initialises a new key if it doesn't exist
@@ -25,8 +25,8 @@ class KMS:
 
         # read key if key exists else generate a new one
         if os.path.exists(constants.SHARED_KEY_FILE):
-            fileRead = open(constants.SHARED_KEY_FILE, "r")
-            self.key = fileRead.read()
+            fileIn = open(constants.SHARED_KEY_FILE, "r")
+            self.key = fileIn.read()
         else:
             self.__generate_new_key__()
 
@@ -46,7 +46,20 @@ class KMS:
         if not os.path.isdir(constants.FOLDER_NAME):
             os.mkdir(constants.FOLDER_NAME)
 
-        # save key to appropraite file in directory
-        filepath = open(constants.SHARED_KEY_FILE, "w")
-        filepath.write(self.key)
-        filepath.close()
+        # save key to appropriate file in directory
+        fileOut = open(constants.SHARED_KEY_FILE, "w")
+        fileOut.write(self.key)
+        fileOut.close()
+
+        # TODO: broadcast the new key to everyone (here or in group handler class?)
+
+
+    # Returns the symmetric key
+    def getKey(self):
+        """
+        Returns the symmetric key to the caller
+
+        return: Symmetric key
+        """
+
+        return self.key
