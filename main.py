@@ -5,6 +5,7 @@
 from KeyManagementSystem import KMS
 import FileSharing
 
+
 # Main method
 if __name__ == "__main__":
     # TODO: call method to accept user input here
@@ -14,4 +15,7 @@ if __name__ == "__main__":
     print(tmp.getKey())
 
     # TODO: get rid of this temp code
-    # call FileSharing method
+    encr = (FileSharing._encrypt("Test text", tmp.fernet))
+    print(encr)
+    decr = (FileSharing._decrypt(encr, tmp.fernet))
+    print(decr)

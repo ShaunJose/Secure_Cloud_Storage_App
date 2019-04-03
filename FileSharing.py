@@ -3,6 +3,7 @@
 
 # Imports
 import os
+from constants import ENCR_EXTENSION
 
 # Uploads file after encrypting it
 def upload_file(filename, fernet):
@@ -15,30 +16,40 @@ def upload_file(filename, fernet):
     return: Filename of encrypted file, if file uploaded successfully, else None
     """
 
-    # if 
-    # TODO: encrypt file
+    # return None if file doesn't exist
+    if not os.path.exists(filename):
+        return None
+
+    # TODO: Read file
+
+    # TODO: encrypt data from file
+
+    # TODO: save file locally
+    # NOTE: Filename should have encrpyt extension
 
     # TODO: upload file to google drive
 
-    return None
 
 
 # Encrypts file
-def _encrypt(filename, fernet):
+def _encrypt(plain_text, fernet):
     """
-    Encrypts the file named with the filename passed to it
+    Encrypts the plain_text passed to it
 
-    param filename: File to be encrypted
+    param plain_text: Data to be encrypted
     fernet: The fernet object created in KeyManagementSystem class
 
-    return: None
+    return: Encrypted plain_text
     """
+
+    cipher_text = fernet.encrypt(plain_text)
+    return cipher_text
 
 
 # Downloads file and descrypts it
 def download_file(filename, fernet):
     """
-    Downloads a file named filename from the dirve, if the file exists
+    Downloads a file named filename from the drive, if the file exists
 
     param filename: Name of the file to be downloaded
     fernet: The fernet object created in KeyManagementSystem class
@@ -46,20 +57,28 @@ def download_file(filename, fernet):
     return: Filename of decrypted file, if file downloaded successfully, else None
     """
 
+    # TODO: return None if file doesnt exist on drive
+
     # TODO: download file from google drive
 
     # TODO: decrypt file
+
+    # TODO: maybe open file over here or from caller method
+    # NOTE: Filename wont have encrpyt extension
 
     return None
 
 
 # Decrypts a file
-def _decrypt(filename, fernet):
+def _decrypt(cipher_text, fernet):
     """
-    Decrypts the encrypted file named with the filename passed to it
+    Decrypts the cipher_text passed to it
 
-    param filename: File to be decrypted
+    param cipher_text: Data to be decrypted
     fernet: The fernet object created in KeyManagementSystem class
 
-    return: None
+    return: Decrypted cipher_text
     """
+
+    plain_text = fernet.decrypt(cipher_text)
+    return plain_text
