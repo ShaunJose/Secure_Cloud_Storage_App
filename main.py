@@ -3,7 +3,7 @@
 
 # Imports
 from KeyManagementSystem import KMS
-import FileSharing
+from FileSharing import GoogleDriveAccess
 
 
 # Main method
@@ -12,16 +12,20 @@ if __name__ == "__main__":
 
     # TODO: move all this code (even below it) to appropriate place
     tmp = KMS()
-    print(tmp.getKey())
+    print(tmp.key)
 
-    # filename = FileSharing.upload_file("test file 1.jpg", tmp.fernet)
-    # print("\n\nEncrypted version in: " + filename)
-    #
-    # filename = FileSharing.upload_file("test file 2.txt", tmp.fernet)
-    # print("Encrypted version in: " + filename)
+    driveAccess = GoogleDriveAccess()
 
-    filename = FileSharing.download_file("test file 1.jpg", tmp.fernet)
+    # TODO: initialise group from files or new group if file doesnt exist
+
+    filename = driveAccess.upload_file("test file 1.jpg", tmp.fernet)
+    print("\n\nEncrypted version in: " + filename)
+
+    filename = driveAccess.upload_file("test file 2.txt", tmp.fernet)
+    print("Encrypted version in: " + filename)
+
+    filename = driveAccess.download_file("test file 1.jpg", tmp.fernet)
     print("\n\nDecrypted version in: " + filename)
 
-    filename = FileSharing.download_file("test file 2.txt.encrypt", tmp.fernet)
+    filename = driveAccess.download_file("test file 2.txt.encrypt", tmp.fernet)
     print("Decrypted version in: " + filename)

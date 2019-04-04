@@ -101,3 +101,6 @@ venv.bak/
 
 #.DS_Store
 .DS_Store
+
+# client id and secret key file
+client_secrets.json

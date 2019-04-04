@@ -57,13 +57,15 @@ class KMS:
 
         # TODO: broadcast the new key to everyone (here or in group handler class?)
 
+        # TODO: Re encrypt all files with new key, if any files exist on the drive
 
-    # Returns the symmetric key
-    def getKey(self):
-        """
-        Returns the symmetric key to the caller
-
-        return: Symmetric key
-        """
-
-        return self.key
+    # 
+    # # Returns the symmetric key
+    # def getKey(self):
+    #     """
+    #     Returns the symmetric key to the caller
+    #
+    #     return: Symmetric key
+    #     """
+    #
+    #     return self.key
