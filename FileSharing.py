@@ -4,8 +4,7 @@
 # Imports
 import os
 from constants import ENCR_EXTENSION
-from FileFunctionalities import readFile
-from FileFunctionalities import saveFile
+from FileFunctionalities import readFile, saveFile
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
@@ -15,8 +14,9 @@ class GoogleDriveAccess:
 
     # Constructor
     def __init__(self):
-        self.googleAccountAuth = GoogleAuth() # init auth obj
-        self.googleAccountAuth.LocalWebserverAuth() # ask user to complete auth
+        self.googleAuth = GoogleAuth() # init authentication obj
+        self.googleAuth.LocalWebserverAuth() # ask user to complete auth, if not already completed
+        self.drive = GoogleDrive(self.googleAuth) # init drive obj
 
 
     # Uploads a file after encrypting it
@@ -45,6 +45,9 @@ class GoogleDriveAccess:
         saveFile(EncryptedFilename, cipher_text)
 
         # TODO: upload file to google drive
+        fileToUpload = self.drive.CreateFile()
+        fileToUpload.SetContentFile(EncryptedFilename) # set file contents
+        fileToUpload.Upload()
 
         # TODO: maybe delete local version of encrypted file here
 

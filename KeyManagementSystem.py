@@ -3,10 +3,8 @@
 
 # Imports
 import os
-from constants import SHARED_KEY_FILE
-from constants import FOLDER_NAME
-from FileFunctionalities import readFile
-from FileFunctionalities import saveFile
+from constants import FOLDER_NAME, SHARED_KEY_FILE
+from FileFunctionalities import readFile, saveFile
 from cryptography.fernet import Fernet
 
 
@@ -59,7 +57,7 @@ class KMS:
 
         # TODO: Re encrypt all files with new key, if any files exist on the drive
 
-    # 
+    #
     # # Returns the symmetric key
     # def getKey(self):
     #     """

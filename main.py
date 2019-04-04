@@ -21,11 +21,11 @@ if __name__ == "__main__":
     filename = driveAccess.upload_file("test file 1.jpg", tmp.fernet)
     print("\n\nEncrypted version in: " + filename)
 
-    filename = driveAccess.upload_file("test file 2.txt", tmp.fernet)
-    print("Encrypted version in: " + filename)
-
-    filename = driveAccess.download_file("test file 1.jpg", tmp.fernet)
-    print("\n\nDecrypted version in: " + filename)
-
-    filename = driveAccess.download_file("test file 2.txt.encrypt", tmp.fernet)
-    print("Decrypted version in: " + filename)
+    # filename = driveAccess.upload_file("test file 2.txt", tmp.fernet)
+    # print("Encrypted version in: " + filename)
+    #
+    # filename = driveAccess.download_file("test file 1.jpg", tmp.fernet)
+    # print("\n\nDecrypted version in: " + filename)
+    #
+    # filename = driveAccess.download_file("test file 2.txt.encrypt", tmp.fernet)
+    # print("Decrypted version in: " + filename)
