@@ -7,6 +7,7 @@ from constants import ENCR_EXTENSION
 from FileFunctionalities import readFile
 from FileFunctionalities import saveFile
 from pydrive.auth import GoogleAuth
+from pydrive.drive import GoogleDrive
 
 
 # Google drive access class
@@ -37,7 +38,7 @@ class GoogleDriveAccess:
         plain_text = readFile(filename)
 
         # Get encrypted file data
-        cipher_text = self._encrypt(plain_text, fernet)
+        cipher_text = GoogleDriveAccess._encrypt(plain_text, fernet)
 
         # Save file locally
         EncryptedFilename = filename + ENCR_EXTENSION
@@ -51,7 +52,8 @@ class GoogleDriveAccess:
 
 
     # Encrypts file
-    def _encrypt(self, plain_text, fernet):
+    @staticmethod
+    def _encrypt(plain_text, fernet):
         """
         Encrypts the plain_text passed to it
 
@@ -90,7 +92,7 @@ class GoogleDriveAccess:
         # TODO: maybe delete downloaded encrypted version of the file here.
 
         # Get decrypted file data
-        plain_text = self._decrypt(cipher_text, fernet)
+        plain_text = GoogleDriveAccess._decrypt(cipher_text, fernet)
 
         # Save decrypted data here
         DecryptedFileName = filename[ : -len(ENCR_EXTENSION)]
@@ -105,7 +107,8 @@ class GoogleDriveAccess:
 
 
     # Decrypts a file
-    def _decrypt(self, cipher_text, fernet):
+    @staticmethod
+    def _decrypt(cipher_text, fernet):
         """
         Decrypts the cipher_text passed to it
 
