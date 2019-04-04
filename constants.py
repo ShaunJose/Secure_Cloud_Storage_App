@@ -9,3 +9,6 @@ ENCR_EXTENSION = ".encrypt"
 
 # Google drive folder name where all encrypted files will be saved online
 DRIVE_FOLDER = "Secure Cloud Storage"
+
+# Id of the root folder on drive
+DRIVE_ROOT_ID = "root"

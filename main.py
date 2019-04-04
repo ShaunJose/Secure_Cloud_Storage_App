@@ -16,13 +16,20 @@ if __name__ == "__main__":
 
     driveAccess = GoogleDriveAccess()
 
-    # TODO: initialise group from files or new group if file doesnt exist
+    # TODO: initialise group from files or new group if group file doesnt exist
 
     filename = driveAccess.upload_file("test file 1.jpg", tmp.fernet)
-    print("\n\nEncrypted version in: " + filename)
+    if filename != None:
+        print("\n\nEncrypted version in: " + filename)
+    else:
+        print("\n\nUpload failed.")
 
-    # filename = driveAccess.upload_file("test file 2.txt", tmp.fernet)
-    # print("Encrypted version in: " + filename)
+    filename = driveAccess.upload_file("test file 2.txt", tmp.fernet)
+    if filename != None:
+        print("\n\nEncrypted version in: " + filename)
+    else:
+        print("\n\nUpload failed.")
+
     #
     # filename = driveAccess.download_file("test file 1.jpg", tmp.fernet)
     # print("\n\nDecrypted version in: " + filename)
