@@ -104,3 +104,6 @@ venv.bak/
 
 # client id and secret key file
 client_secrets.json
+
+# auth cookie containing saved authentication info
+authCookie.json

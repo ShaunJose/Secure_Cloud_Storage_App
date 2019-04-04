@@ -15,7 +15,7 @@ class GoogleDriveAccess:
     # Constructor
     def __init__(self):
         self.googleAccountAuth = GoogleAuth() # init auth obj
-        self.googleAccountAuth.LocalWebserverAuth() # ask user for auth
+        self.googleAccountAuth.LocalWebserverAuth() # ask user to complete auth
 
 
     # Uploads a file after encrypting it

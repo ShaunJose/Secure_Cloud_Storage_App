@@ -1,0 +1,5 @@
+client_config_backend: 'file' # read client id and key from file 'client_secrets.json'
+
+save_credentials: True # save credentials once authenticated.
+save_credentials_backend: file
+save_credentials_file: authCookie.json # save credentials to this file
