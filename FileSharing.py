@@ -3,7 +3,7 @@
 
 # Imports
 import os
-from constants import ENCR_EXTENSION
+from constants import ENCR_EXTENSION, DRIVE_FOLDER
 from FileFunctionalities import readFile, saveFile
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
@@ -44,7 +44,22 @@ class GoogleDriveAccess:
         EncryptedFilename = filename + ENCR_EXTENSION
         saveFile(EncryptedFilename, cipher_text)
 
-        # TODO: upload file to google drive
+        # Iterate through files & folders in root, until folder needed is found
+        folderID = None
+        file_list = self.drive.ListFile({'q': "'root' in parents and trashed=false"}).GetList()
+        for file in file_list:
+            if file['title'] == DRIVE_FOLDER:
+                folderID = file['id']
+                break
+
+        # Create folder on drive if it doesnt exist
+        if folderID == None:
+            folder = self.drive.CreateFile({'title': DRIVE_FOLDER, "mimeType": "application/vnd.google-apps.folder"})
+            folder.Upload()
+            folderID = folder["id"]
+            # TODO: share folder to people (one by one (use another function that adds only one user), so you can use that function to share the folder to a new member added)
+
+        # Upload file to google drive folder
         fileToUpload = self.drive.CreateFile()
         fileToUpload.SetContentFile(EncryptedFilename) # set file contents
         fileToUpload.Upload()
