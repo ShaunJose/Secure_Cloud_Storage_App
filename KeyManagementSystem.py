@@ -29,6 +29,7 @@ class KMS:
             self.key = readFile(SHARED_KEY_FILE)
             self.fernet = Fernet(self.key) # create fernet obj
         else:
+            # TODO: if it's not admin, do I generate key or get key from admin?
             self.__generate_new_key__()
 
 
@@ -55,7 +56,7 @@ class KMS:
 
         # TODO: broadcast the new key to everyone (here or in group handler class?)
 
-        # TODO: Re encrypt all files with new key, if any files exist on the drive
+        # TODO: Donwload, Re encrypt all files with new key, and upload if any files exist on the drive. Also delete all previous files on drive after downloaded
 
     #
     # # Returns the symmetric key

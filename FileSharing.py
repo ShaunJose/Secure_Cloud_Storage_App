@@ -17,6 +17,7 @@ class GoogleDriveAccess:
         self.googleAuth = GoogleAuth() # init authentication obj
         self.googleAuth.LocalWebserverAuth() # ask user to complete auth, if not already completed
         self.drive = GoogleDrive(self.googleAuth) # init drive obj
+        # TODO: create folder here, where all files would be
 
 
     # Uploads a file after encrypting it
@@ -41,6 +42,7 @@ class GoogleDriveAccess:
         # Create and share folder on drive if it doesnt exist, and get folderID
         if folderID == None:
             folderID = self.__create_share_folder__()
+            print("Created shared folder on drive")
 
         # Check if file with identical name is already on the drive
         encryptedFilename = filename + ENCR_EXTENSION
@@ -60,6 +62,7 @@ class GoogleDriveAccess:
         fileToUpload.Upload()
 
         # TODO: maybe delete local version of encrypted file here
+        os.remove("./" + encryptedFilename)
 
         return encryptedFilename
 
@@ -95,26 +98,31 @@ class GoogleDriveAccess:
         if ENCR_EXTENSION not in filename:
             filename = filename + ENCR_EXTENSION
 
-        # TODO: return None if file doesnt exist on drive
+        # If drive's shared folder doesn't exist, return None
+        folderID = self._get_file_ID_(DRIVE_FOLDER, DRIVE_ROOT_ID)
+        if folderID == None:
+            print("Error 404: Shared folder not found on drive")
+            return None
 
-        # TODO: download file from google drive
+        # Return None if file doesnt exist on drive
+        fileID = self._get_file_ID_(filename, folderID)
+        if fileID == None:
+            print("Error 404: File specified does not exist on the drive")
+            return None
 
-        # Get file contents
-        cipher_text = readFile(filename)
+        # Download encrypted file contents from google drive
+        downloadedFile = self.drive.CreateFile({'id': fileID})
+        cipher_text = downloadedFile.GetContentString()
 
-        # TODO: maybe delete downloaded encrypted version of the file here.
-
-        # Get decrypted file data
-        plain_text = GoogleDriveAccess._decrypt_(cipher_text, fernet)
-
-        # Save decrypted data here
-        DecryptedFileName = filename[ : -len(ENCR_EXTENSION)]
-        saveFile(DecryptedFileName, plain_text)
+        # Get decrypted file data and save decrypted file locally
+        plain_text = GoogleDriveAccess._decrypt_(cipher_text.encode('utf-8'), fernet)
+        decryptedFilename = filename[ : -len(ENCR_EXTENSION)]
+        saveFile(decryptedFilename, plain_text)
 
         # TODO: maybe open file over here or from caller method
         # NOTE: Filename wont have encrpyt extension
 
-        return DecryptedFileName
+        return decryptedFilename
 
         return None
 

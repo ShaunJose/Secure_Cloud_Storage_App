@@ -20,19 +20,25 @@ if __name__ == "__main__":
 
     filename = driveAccess.upload_file("test file 1.jpg", tmp.fernet)
     if filename != None:
-        print("\n\nEncrypted version in: " + filename)
+        print("\n\nEncrypted version in: " + filename + " on the drive")
     else:
         print("\n\nUpload failed.")
 
     filename = driveAccess.upload_file("test file 2.txt", tmp.fernet)
     if filename != None:
-        print("\n\nEncrypted version in: " + filename)
+        print("\n\nEncrypted version in: " + filename + " on the drive")
     else:
         print("\n\nUpload failed.")
 
-    #
-    # filename = driveAccess.download_file("test file 1.jpg", tmp.fernet)
-    # print("\n\nDecrypted version in: " + filename)
-    #
-    # filename = driveAccess.download_file("test file 2.txt.encrypt", tmp.fernet)
-    # print("Decrypted version in: " + filename)
+
+    filename = driveAccess.download_file("test file 1.jpg", tmp.fernet)
+    if filename != None:
+        print("\n\nDecrypted version in: " + filename)
+    else:
+        print("\n\nDonwload failed.")
+
+    filename = driveAccess.download_file("test file 2.txt.encrypt", tmp.fernet)
+    if filename != None:
+        print("\n\nDecrypted version in: " + filename)
+    else:
+        print("\n\nDonwload failed.")
