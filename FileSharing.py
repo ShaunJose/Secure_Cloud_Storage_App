@@ -3,7 +3,7 @@
 
 # Imports
 import os
-from constants import ENCR_EXTENSION, DRIVE_FOLDER, DRIVE_ROOT_ID
+from constants import USER_FILES_FOLDER, ENCR_EXTENSION, DRIVE_FOLDER, DRIVE_ROOT_ID
 from FileFunctionalities import readFile, saveFile
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
@@ -17,7 +17,9 @@ class GoogleDriveAccess:
         self.googleAuth = GoogleAuth() # init authentication obj
         self.googleAuth.LocalWebserverAuth() # ask user to complete auth, if not already completed
         self.drive = GoogleDrive(self.googleAuth) # init drive obj
-        # TODO: create folder here, where all files would be
+        # Create user-files folder here, where all the user's files would be saved (if it doesn't already exist)
+        if not os.path.isdir(USER_FILES_FOLDER):
+            os.mkdir(USER_FILES_FOLDER)
 
 
     # Uploads a file after encrypting it
@@ -30,6 +32,9 @@ class GoogleDriveAccess:
 
         return: Filename of encrypted file, if file uploaded successfully, else None
         """
+
+        # add path to filename if needed
+        filename = GoogleDriveAccess.normaliseFilename(filename)
 
         # return None if file doesn't exist
         if not os.path.exists(filename):
@@ -67,22 +72,6 @@ class GoogleDriveAccess:
         return encryptedFilename
 
 
-    # Encrypts file
-    @staticmethod
-    def _encrypt_(plain_text, fernet):
-        """
-        Encrypts the plain_text passed to it
-
-        param plain_text: Data to be encrypted
-        param fernet: The fernet object created in KeyManagementSystem class
-
-        return: The encrypted plain_text
-        """
-
-        cipher_text = fernet.encrypt(plain_text)
-        return cipher_text
-
-
     # Downloads a file and saves the decrypted version of it
     def download_file(self, filename, fernet):
         """
@@ -116,6 +105,7 @@ class GoogleDriveAccess:
 
         # Get decrypted file data and save decrypted file locally
         plain_text = GoogleDriveAccess._decrypt_(cipher_text.encode('utf-8'), fernet)
+        filename = GoogleDriveAccess.normaliseFilename(filename)
         decryptedFilename = filename[ : -len(ENCR_EXTENSION)]
         saveFile(decryptedFilename, plain_text)
 
@@ -125,22 +115,6 @@ class GoogleDriveAccess:
         return decryptedFilename
 
         return None
-
-
-    # Decrypts a file
-    @staticmethod
-    def _decrypt_(cipher_text, fernet):
-        """
-        Decrypts the cipher_text passed to it
-
-        param cipher_text: Data to be decrypted
-        param fernet: The fernet object created in KeyManagementSystem class
-
-        return: The decrypted cipher_text
-        """
-
-        plain_text = fernet.decrypt(cipher_text)
-        return plain_text
 
 
     # Gets the file ID of the file specified in the specified parents
@@ -179,3 +153,52 @@ class GoogleDriveAccess:
         # TODO: share folder to people (one by one (use another function that adds only one user), so you can use that function to share the folder to a new member added)
 
         return folder["id"]
+
+
+    # Encrypts file
+    @staticmethod
+    def _encrypt_(plain_text, fernet):
+        """
+        Encrypts the plain_text passed to it
+
+        param plain_text: Data to be encrypted
+        param fernet: The fernet object created in KeyManagementSystem class
+
+        return: The encrypted plain_text
+        """
+
+        cipher_text = fernet.encrypt(plain_text)
+        return cipher_text
+
+
+    # Decrypts a file
+    @staticmethod
+    def _decrypt_(cipher_text, fernet):
+        """
+        Decrypts the cipher_text passed to it
+
+        param cipher_text: Data to be decrypted
+        param fernet: The fernet object created in KeyManagementSystem class
+
+        return: The decrypted cipher_text
+        """
+
+        plain_text = fernet.decrypt(cipher_text)
+        return plain_text
+
+
+    # Adds folder path to filename if it doesn't already exist
+    @staticmethod
+    def normaliseFilename(filename):
+        """
+        Adds folder path to filename if filename doesn't already have it
+
+        param filename: Filename to normalise
+
+        return: Normalized file name
+        """
+
+        if USER_FILES_FOLDER not in filename:
+            filename = USER_FILES_FOLDER + "/" + filename
+
+        return filename
