@@ -86,7 +86,7 @@ class GoogleDriveAccess:
         return: Filename of decrypted file, if file downloaded successfully, else None
         """
 
-        # add encrypt extension if it's not in filename
+        # Add encrypt extension if it's not in filename
         if ENCR_EXTENSION not in filename:
             filename = filename + ENCR_EXTENSION
 
@@ -131,16 +131,16 @@ class GoogleDriveAccess:
         return: id of the file if found in parents, else None
         """
 
-        folderID = None
+        fileID = None
 
         # Iterate through files & folders in specified parent, until file/folder needed is found
         file_list = self.drive.ListFile({'q': "'%s' in parents and trashed=false" % (parents)}).GetList()
         for file in file_list:
             if file['title'] == filename:
-                folderID = file['id']
+                fileID = file['id']
                 break
 
-        return folderID
+        return fileID
 
 
     # creates and shares the shared drive folder
