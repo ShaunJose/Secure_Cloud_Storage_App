@@ -34,6 +34,7 @@ class GoogleDriveAccess:
         """
 
         # add path to filename if needed
+        prevFilename = filename
         filename = GoogleDriveAccess.normaliseFilename(filename)
 
         # return None if file doesn't exist
@@ -50,7 +51,7 @@ class GoogleDriveAccess:
             print("Created shared folder on drive")
 
         # Check if file with identical name is already on the drive
-        encryptedFilename = filename + ENCR_EXTENSION
+        encryptedFilename = prevFilename + ENCR_EXTENSION
         encryptedFileID = self._get_file_ID_(encryptedFilename, folderID)
         if encryptedFileID != None: # implies there's a file identically named
             print("This file is already up on the drive!")
@@ -59,15 +60,17 @@ class GoogleDriveAccess:
         # Save encrypted file locally
         plain_text = readFile(filename) # getting file contents
         cipher_text = GoogleDriveAccess._encrypt_(plain_text, fernet)
-        saveFile(encryptedFilename, cipher_text) # Saving file locally
+        normEncryptedFilename = encryptedFilename
+        normEncryptedFilename = GoogleDriveAccess.normaliseFilename(normEncryptedFilename)
+        saveFile(normEncryptedFilename, cipher_text) # Saving file locally
 
         # Upload encrypted file to google drive folder
-        fileToUpload = self.drive.CreateFile({"parents": [{"id": folderID}]})
-        fileToUpload.SetContentFile(encryptedFilename) # set file contents
+        fileToUpload = self.drive.CreateFile({"title": encryptedFilename, "parents": [{"id": folderID}]})
+        fileToUpload.SetContentFile(normEncryptedFilename) # set file contents
         fileToUpload.Upload()
 
-        # TODO: maybe delete local version of encrypted file here
-        os.remove("./" + encryptedFilename)
+        # Delete local version of encrypted file here
+        os.remove(normEncryptedFilename)
 
         return encryptedFilename
 
