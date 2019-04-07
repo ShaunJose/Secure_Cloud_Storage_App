@@ -3,7 +3,7 @@
 
 # Imports
 import os
-from constants import USER_FILES_FOLDER, ENCR_EXTENSION, DRIVE_FOLDER, DRIVE_ROOT_ID
+from constants import ENCR_EXTENSION, DRIVE_FOLDER, DRIVE_ROOT_ID
 from FileFunctionalities import readFile, saveFile
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
@@ -13,14 +13,15 @@ from pydrive.drive import GoogleDrive
 class GoogleDriveAccess:
 
     # Constructor
-    def __init__(self):
+    def __init__(self, username):
         self.googleAuth = GoogleAuth() # init authentication obj
         self.googleAuth.LocalWebserverAuth() # ask user to complete auth, if not already completed
         self.drive = GoogleDrive(self.googleAuth) # init drive obj
         # Create user-files folder here, where all the user's files would be saved (if it doesn't already exist)
         # TODO: change USER_FILES_FOLDER to self.user_folder = username_files
-        if not os.path.isdir(USER_FILES_FOLDER):
-            os.mkdir(USER_FILES_FOLDER)
+        self.user_folder = username + "_files"
+        if not os.path.isdir(self.user_folder):
+            os.mkdir(self.user_folder)
 
 
     # Uploads a file after encrypting it
@@ -36,7 +37,7 @@ class GoogleDriveAccess:
 
         # add path to filename if needed
         prevFilename = filename
-        filename = GoogleDriveAccess.normaliseFilename(filename)
+        filename = self.normaliseFilename(filename)
 
         # return None if file doesn't exist
         if not os.path.exists(filename):
@@ -62,7 +63,7 @@ class GoogleDriveAccess:
         plain_text = readFile(filename) # getting file contents
         cipher_text = GoogleDriveAccess._encrypt_(plain_text, fernet)
         normEncryptedFilename = encryptedFilename
-        normEncryptedFilename = GoogleDriveAccess.normaliseFilename(normEncryptedFilename)
+        normEncryptedFilename = self.normaliseFilename(normEncryptedFilename)
         saveFile(normEncryptedFilename, cipher_text) # Saving file locally
 
         # Upload encrypted file to google drive folder
@@ -109,7 +110,7 @@ class GoogleDriveAccess:
 
         # Get decrypted file data and save decrypted file locally
         plain_text = GoogleDriveAccess._decrypt_(cipher_text.encode('utf-8'), fernet)
-        filename = GoogleDriveAccess.normaliseFilename(filename)
+        filename = self.normaliseFilename(filename)
         decryptedFilename = filename[ : -len(ENCR_EXTENSION)]
         saveFile(decryptedFilename, plain_text)
 
@@ -159,6 +160,22 @@ class GoogleDriveAccess:
         return folder["id"]
 
 
+    # Adds folder path to filename if it doesn't already exist
+    def normaliseFilename(self, filename):
+        """
+        Adds folder path to filename if filename doesn't already have it
+
+        param filename: Filename to normalise
+
+        return: Normalized file name
+        """
+
+        if self.user_folder not in filename:
+            filename = self.user_folder + "/" + filename
+
+        return filename
+
+
     # Encrypts file
     @staticmethod
     def _encrypt_(plain_text, fernet):
@@ -189,20 +206,3 @@ class GoogleDriveAccess:
 
         plain_text = fernet.decrypt(cipher_text)
         return plain_text
-
-
-    # Adds folder path to filename if it doesn't already exist
-    @staticmethod
-    def normaliseFilename(filename):
-        """
-        Adds folder path to filename if filename doesn't already have it
-
-        param filename: Filename to normalise
-
-        return: Normalized file name
-        """
-
-        if USER_FILES_FOLDER not in filename:
-            filename = USER_FILES_FOLDER + "/" + filename
-
-        return filename

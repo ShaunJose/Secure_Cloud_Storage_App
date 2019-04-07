@@ -3,7 +3,7 @@
 
 # Imports
 import os
-from constants import LOCAL_FOLDER, SHARED_KEY_FILE
+from constants import ADMIN_FOLDER, SHARED_KEY_FILE
 from FileFunctionalities import readFile, saveFile
 from cryptography.fernet import Fernet
 
@@ -25,8 +25,8 @@ class KMS:
         """
 
         # read key if key exists else generate a new one
-        if os.path.exists(SHARED_KEY_FILE):
-            self.key = readFile(SHARED_KEY_FILE)
+        if os.path.exists(ADMIN_FOLDER + "/" + SHARED_KEY_FILE):
+            self.key = readFile(ADMIN_FOLDER + "/" + SHARED_KEY_FILE)
             self.fernet = Fernet(self.key) # create fernet obj
         else:
             # TODO: if it's not admin, do I generate key or get key from admin?
@@ -44,12 +44,12 @@ class KMS:
         # generate a key
         self.key = Fernet.generate_key()
 
-        # create file-keeping directory if it doesn't exist
-        if not os.path.isdir(LOCAL_FOLDER):
-            os.mkdir(LOCAL_FOLDER)
+        # create admin's directory if it doesn't exist
+        if not os.path.isdir(ADMIN_FOLDER):
+            os.mkdir(ADMIN_FOLDER)
 
-        # save key to appropriate file in directory
-        saveFile(SHARED_KEY_FILE, self.key)
+        # save key to appropriate file in admin's directory
+        saveFile(ADMIN_FOLDER + "/" + SHARED_KEY_FILE, self.key)
 
         # create fernet object
         self.fernet = Fernet(self.key) # create fernet obj
