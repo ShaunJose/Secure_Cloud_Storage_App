@@ -18,6 +18,7 @@ class GoogleDriveAccess:
         self.googleAuth.LocalWebserverAuth() # ask user to complete auth, if not already completed
         self.drive = GoogleDrive(self.googleAuth) # init drive obj
         # Create user-files folder here, where all the user's files would be saved (if it doesn't already exist)
+        # TODO: change USER_FILES_FOLDER to self.user_folder = username_files
         if not os.path.isdir(USER_FILES_FOLDER):
             os.mkdir(USER_FILES_FOLDER)
 
