@@ -9,11 +9,37 @@ from constants import USERS_FILE, N_USERS_FILE, USER_DELIM, USER_PASS_DELIM
 # Accepts a user log in
 def acceptUser():
 
+    # get current users (with passwords) and new users
     users_pass = _getCurrUsersPass_()
-    print(users_pass)
-
     new_users = _getNewUsers_()
-    print(new_users)
+
+    # ask user for username
+    while True:
+        username = raw_input("Username: ")
+        if username in users_pass['users']:
+            index = users_pass['users'].index(username)
+            password = raw_input("Password: ")
+            if password == (users_pass['passwords'])[index]:
+                print("Login successful!\n")
+                break
+            else:
+                print("Incorrect details. Please try again.\n") # Wrong password
+        elif username in new_users:
+            s_password = raw_input("Set password: ")
+            c_password = raw_input("Confirm password: ")
+            if s_password == c_password:
+                users_pass['users'].append(username) # add user details to curr users dict
+                users_pass['passwords'].append(s_password)
+                new_users.remove(username) # not a new user anymore
+                print("Password saved and login successful!\n")
+                break
+            else:
+                print("Passwords don't match. Login failed.\n")
+        else:
+            print("User specified is not currently in the group.\n")
+
+    print("Reached here!")
+    # TODO: Program startoff
 
 
 # Reads current user's and passwords file and return a dict with users and pass
