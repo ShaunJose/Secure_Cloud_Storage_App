@@ -30,3 +30,13 @@ KEY_DELIM = "\n\n\n\n"
 
 # Private key file name for each user
 PRIV_KEY_FILE = "Private_Key"
+
+# Test message for signature verification
+TEST_MSG = b"Just a test message, not like the usual one but not unique either."
+
+# Instructions for user input (upload, download, add user, remove user)
+INSTR_UP = "To upload a file to the drive, type upload filename (with extension). Make sure the file is in your user folder"
+INSTR_DOWN = "To download a file from the drive, type download filename (with extension)"
+INSTR_ADD = "To add a user, type add username"
+INSTR_REM = "To remove a user, type remove username"
+INSTR_EXIT = "Enter e to exit, or continue file sharing\n"

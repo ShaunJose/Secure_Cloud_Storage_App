@@ -12,6 +12,8 @@ if __name__ == "__main__":
     # TODO: call method to accept user input here
     GroupHandler.acceptUser()
 
+    print("Goodbye!")
+
     # TODO: move all this code (even below it) to appropriate place
     # tmp = KMS()
     # print(tmp.key)

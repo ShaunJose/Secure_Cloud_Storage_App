@@ -3,7 +3,7 @@
 
 # Imports
 import os
-from constants import ENCR_EXTENSION, DRIVE_FOLDER, DRIVE_ROOT_ID
+from constants import ENCR_EXTENSION, DRIVE_FOLDER, DRIVE_ROOT_ID, INSTR_UP, INSTR_DOWN, INSTR_ADD, INSTR_REM, INSTR_EXIT
 from FileFunctionalities import readFile, saveFile
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
@@ -206,3 +206,51 @@ class GoogleDriveAccess:
 
         plain_text = fernet.decrypt(cipher_text)
         return plain_text
+
+
+    # Simulates file sharing for a user
+    @staticmethod
+    def startSharing(username, fernet):
+
+        GoogleDriveAccess.printInstructions(False) #print instructions to the user
+
+        # accept user input
+        exit = False
+        driveAccess = GoogleDriveAccess(username)
+        while not exit:
+            userIn = raw_input(INSTR_EXIT)
+            if userIn == "e":
+                exit = True
+            elif len(userIn) > 7 and userIn[0:7] == "upload ":
+                filename = driveAccess.upload_file(userIn[7:], fernet)
+                if filename != None:
+                    print("\n\nEncrypted version in: " + filename + " on the drive")
+                else:
+                    print("\n\nUpload failed.")
+            elif len(userIn) > 9 and userIn[0:9] == "download ":
+                filename = driveAccess.download_file(userIn[9:], fernet)
+                if filename != None:
+                    print("\n\nDecrypted version saved in: " + filename)
+                else:
+                    print("\n\nDonwload failed.")
+            else:
+                print("Invalid input. Please try again")
+
+
+    # Prints the instructions for file sharing
+    @staticmethod
+    def printInstructions(adminInstructions):
+        """
+        Prints the instructions for filesharing
+
+        param adminInstructions: True to print add and remove user messages, keep False otherwise
+
+        return: None
+        """
+
+        if adminInstructions:
+            print(INSTR_ADD)
+            print(INSTR_REM)
+
+        print(INSTR_UP)
+        print(INSTR_DOWN)
