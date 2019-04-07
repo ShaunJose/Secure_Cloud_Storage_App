@@ -15,3 +15,15 @@ DRIVE_FOLDER = "Secure Cloud Storage"
 
 # Id of the root folder on drive
 DRIVE_ROOT_ID = "root"
+
+# Name of file where User names and passwords are saved
+USERS_FILE = "Users.txt"
+
+# Name of file where new users are saved
+N_USERS_FILE = "newUsers.txt"
+
+# Delimiter between users in files
+USER_DELIM = "\n\n"
+
+# Delimiter between user and user's password in files
+USER_PASS_DELIM = "\n"

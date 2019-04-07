@@ -1,0 +1,12 @@
+admin
+hardToGuess
+
+user1
+passFor1
+
+user2
+passFor2
+
+user3
+passFor3
+

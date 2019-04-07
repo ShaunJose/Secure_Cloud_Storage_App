@@ -56,7 +56,7 @@ class KMS:
 
         # TODO: broadcast the new key to everyone (here or in group handler class?)
 
-        # TODO: Donwload, Re encrypt all files with new key, and upload if any files exist on the drive. Also delete all previous files on drive after downloaded
+        # TODO: Donwload, Re encrypt all files with new key, and upload if any files exist on the drive. Also delete all previous files on drive after downloaded (in group handler class)
 
     #
     # # Returns the symmetric key
