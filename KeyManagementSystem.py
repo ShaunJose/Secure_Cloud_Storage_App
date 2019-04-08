@@ -74,15 +74,17 @@ class KMS:
         return: Symmetric key
         """
 
-        # Read private key of user
-        folder_name = username + "_files/"
-        filepath = folder_name + PRIV_KEY_FILE
-        priv_key = serialization.load_pem_private_key(readFile(filepath), password = None, backend = default_backend())
+        sym_key = None
+        if username != "admin":
+            # Read private key of user
+            folder_name = username + "_files/"
+            filepath = folder_name + PRIV_KEY_FILE
+            priv_key = serialization.load_pem_private_key(readFile(filepath), password = None, backend = default_backend())
 
-        #TODO: verification here?
-
-        # Read symmetric key
-        filepath = folder_name + SHARED_KEY_FILE
-        sym_key = priv_key.decrypt(readFile(filepath), padding.OAEP(mgf = padding.MGF1(algorithm = hashes.SHA256()), algorithm = hashes.SHA256(), label = None))
+            # Read symmetric key
+            filepath = folder_name + SHARED_KEY_FILE
+            sym_key = priv_key.decrypt(readFile(filepath), padding.OAEP(mgf = padding.MGF1(algorithm = hashes.SHA256()), algorithm = hashes.SHA256(), label = None))
+        else: # if it's the admin, it's already stored in plaintext
+            sym_key = readFile(ADMIN_FOLDER + "/" + SHARED_KEY_FILE)
 
         return sym_key

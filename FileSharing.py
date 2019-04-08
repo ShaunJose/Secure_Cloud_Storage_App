@@ -207,31 +207,64 @@ class GoogleDriveAccess:
 
     # Simulates file sharing for a user
     @staticmethod
-    def startSharing(username, fernet):
+    def startSharing(username, fernet, users_pass, new_users):
 
-        GoogleDriveAccess.printInstructions(False) #print instructions to the user
+        GoogleDriveAccess.printInstructions(username == "admin") #print instructions to the user
 
         # accept user input
+        old_users = users_pass['users']
+        passwords = users_pass['passwords']
         exit = False
         driveAccess = GoogleDriveAccess(username)
         while not exit:
             userIn = raw_input(INSTR_EXIT)
             if userIn == "e":
                 exit = True
-            elif len(userIn) > 7 and userIn[0:7] == "upload ":
+
+            elif len(userIn) > 7 and userIn[0:7] == "upload ": # upload command
                 filename = driveAccess.upload_file(userIn[7:], fernet)
                 if filename != None:
                     print("\n\nEncrypted version in: " + filename + " on the drive")
                 else:
                     print("\n\nUpload failed.")
-            elif len(userIn) > 9 and userIn[0:9] == "download ":
+
+            elif len(userIn) > 9 and userIn[0:9] == "download ": # download
                 filename = driveAccess.download_file(userIn[9:], fernet)
                 if filename != None:
                     print("\n\nDecrypted version saved in: " + filename)
                 else:
                     print("\n\nDonwload failed.")
-            else:
-                print("Invalid input. Please try again")
+
+            else: # still could be add, remove, or neither
+                if username == "admin": # for admin add and remove exists
+                    if len(userIn) > 4 and userIn[0:4] == "add ": # add
+                        user = userIn[4:]
+                        if user in old_users or user in new_users:
+                            print(user + " is already a part of the group.")
+                        else:
+                            new_users.append(user)
+                            print(user + " successfully added!")
+
+                    elif len(userIn) > 7 and userIn[0:7] == "remove ": # remove
+                        user = userIn[7:]
+                        if user in old_users:
+                            if user == "admin":
+                                print("You can't remove yourself!")
+                            else:
+                                index = old_users.index(user)
+                                del old_users[index]
+                                del passwords[index]
+                                print(user + " has been kicked out!")
+                        elif user in new_users:
+                            new_users.remove(user)
+                            print(user + " has been kicked out!")
+                        else:
+                            print(user + " is not a part of the group.")
+
+                    else:
+                        print("Invalid input. Please try again")
+                else:
+                    print("Invalid input. Please try again")
 
 
     # Prints the instructions for file sharing

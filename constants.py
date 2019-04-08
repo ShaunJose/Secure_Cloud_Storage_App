@@ -25,8 +25,8 @@ USER_DELIM = "\n\n"
 # Delimiter between user and user's password in files
 USER_PASS_DELIM = "\n"
 
-# Delimiter between private and public keys
-KEY_DELIM = "\n\n\n\n"
+# admin's default password
+ADMIN_PASS = "hardToGuess"
 
 # Private key file name for each user
 PRIV_KEY_FILE = "Private Key"
