@@ -1,9 +1,6 @@
 admin
 hardToGuess
 
-newUser2
-random
-
 newUser3
-randomPass
+random3
 

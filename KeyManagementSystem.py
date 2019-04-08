@@ -58,7 +58,8 @@ class KMS:
         # create fernet object
         self.fernet = Fernet(self.key) # create fernet obj
 
-        # TODO: broadcast the new key to everyone (here or in group handler class?)
+        # Broadcast the new key to everyone (method in group handler class)
+        change_all_keys()
 
         # TODO: Donwload, Re encrypt all files with new key, and upload if any files exist on the drive. Also delete all previous files on drive after downloaded (in group handler class)
 
@@ -88,3 +89,6 @@ class KMS:
             sym_key = readFile(ADMIN_FOLDER + "/" + SHARED_KEY_FILE)
 
         return sym_key
+
+# place here due to cyclic imports
+from GroupHandler import change_all_keys

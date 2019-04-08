@@ -57,11 +57,16 @@ def acceptUser():
             print("User specified is not currently in the group.\n")
 
     # start file sharing
-    GoogleDriveAccess.startSharing(username, fernet, users_pass, new_users)
+    removed_old = GoogleDriveAccess.startSharing(username, fernet, users_pass, new_users)
 
     # Save users and new users
     save_old_users(users_pass)
     save_new_users(new_users)
+
+    if removed_old:
+        print("Changing keys and re-encrypting all files...")
+        GoogleDriveAccess.resetDrive()
+        print("Re-encryption successful.")
 
 
 # Reads current user's and passwords file and return a dict with users and pass
@@ -202,3 +207,14 @@ def save_new_users(users):
 
     # save the file
     saveFile(N_USERS_FILE, content)
+
+
+# Changes the private and public key of all (old) users except for admin, and also saves the encrypted version of the NEW or CURRENT symmetric key to the user's files
+def change_all_keys():
+
+    # reinitialise pirv_pub key pair for all users and save new sym key
+    users_pass = _getCurrUsersPass_()
+    users = users_pass['users']
+    for user in users:
+        if user != "admin":
+            handle_new_user(user)

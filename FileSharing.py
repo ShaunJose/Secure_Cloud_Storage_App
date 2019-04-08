@@ -3,8 +3,10 @@
 
 # Imports
 import os
-from constants import ENCR_EXTENSION, DRIVE_FOLDER, DRIVE_ROOT_ID, INSTR_UP, INSTR_DOWN, INSTR_ADD, INSTR_REM, INSTR_EXIT
+import shutil
+from constants import ENCR_EXTENSION, DRIVE_FOLDER, DRIVE_ROOT_ID, INSTR_UP, INSTR_DOWN, INSTR_ADD, INSTR_REM, INSTR_EXIT, ADMIN_FOLDER
 from FileFunctionalities import readFile, saveFile
+from KeyManagementSystem import KMS
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
@@ -115,8 +117,6 @@ class GoogleDriveAccess:
 
         return decryptedFilename
 
-        return None
-
 
     # Gets the file ID of the file specified in the specified parents
     def _get_file_ID_(self, filename, parents):
@@ -214,12 +214,13 @@ class GoogleDriveAccess:
         users_pass: Dictionary of old users and their passwords
         new_users: An array of the uninitialised new users
 
-        return: None
+        return: True if old user removed, False otherwise
         """
 
         GoogleDriveAccess.printInstructions(username == "admin") #print instructions to the user
 
         # accept user input
+        removed_old = False
         old_users = users_pass['users']
         passwords = users_pass['passwords']
         exit = False
@@ -262,6 +263,8 @@ class GoogleDriveAccess:
                                 index = old_users.index(user)
                                 del old_users[index]
                                 del passwords[index]
+                                shutil.rmtree(user + "_files") # del folder
+                                removed_old = True
                                 print(user + " has been kicked out!")
                         elif user in new_users:
                             new_users.remove(user)
@@ -273,6 +276,8 @@ class GoogleDriveAccess:
                         print("Invalid input. Please try again")
                 else:
                     print("Invalid input. Please try again")
+
+        return removed_old
 
 
     # Prints the instructions for file sharing
@@ -292,3 +297,28 @@ class GoogleDriveAccess:
 
         print(INSTR_UP)
         print(INSTR_DOWN)
+
+
+    # Changes the symmetric key, and re - encrypts all files on the drive
+    @staticmethod
+    def resetDrive():
+
+        # init two main instances
+        kms = KMS()
+        driveAccess = GoogleDriveAccess("admin") # get admin's drive access
+
+        # download and then delete all files, decrypt them and save them to admin's folder
+        filenames = []
+        folderID = driveAccess._get_file_ID_(DRIVE_FOLDER, DRIVE_ROOT_ID)
+        file_list = driveAccess.drive.ListFile({'q': "'%s' in parents and trashed=false" % (folderID)}).GetList()
+        for file in file_list:
+            filenames.append(driveAccess.download_file(file['title'], kms.fernet))
+            file.Delete()
+
+        # generate new key and change it for all users' files
+        kms.__generate_new_key__()
+
+        # upload encrypted version of all files (using new key and fernet)
+        for file in filenames:
+            file = file[len(ADMIN_FOLDER) + 1 :] #cut out the 'admin_files/'
+            driveAccess.upload_file(file, kms.fernet)
