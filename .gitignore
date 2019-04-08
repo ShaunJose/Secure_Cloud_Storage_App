@@ -107,3 +107,6 @@ client_secrets.json
 
 # auth cookie containing saved authentication info
 authCookie.json
+
+# pages version of documentation
+Documentation.pages

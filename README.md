@@ -7,12 +7,13 @@ An implementation of a secure cloud storage application for Google drive
 
 
 ### Run
+  
+**Attention!!**   
+Make sure you have your *'client_secrets.json'* file for the Google Drive API, containing your client_id, client secret key, etc  
+
 ```
 python main.py
 ```
-
-**Attention!!**   
-Make sure you have your *'client_secrets.json'* file for the Google Drive API, containing your client_id, client secret key, etc
 
 
 ### Dependencies
