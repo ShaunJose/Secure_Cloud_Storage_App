@@ -211,6 +211,11 @@ def save_new_users(users):
 
 # Changes the private and public key of all (old) users except for admin, and also saves the encrypted version of the NEW or CURRENT symmetric key to the user's files
 def change_all_keys():
+    """
+    Changes the private and public key of all (old) users except for admin, and also saves the encrypted version of the NEW or CURRENT symmetric key to the user's files
+
+    return: None
+    """
 
     # reinitialise pirv_pub key pair for all users and save new sym key
     users_pass = _getCurrUsersPass_()

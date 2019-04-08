@@ -12,6 +12,6 @@ if __name__ == "__main__":
 
     kms = KMS() # to initialise shared key incase it hasnt been initialised
 
-    acceptUser() # Call method to accept user input here
+    acceptUser() # Call method to accept user login
 
     print("Goodbye!")

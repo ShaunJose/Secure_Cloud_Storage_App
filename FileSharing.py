@@ -302,6 +302,11 @@ class GoogleDriveAccess:
     # Changes the symmetric key, and re - encrypts all files on the drive
     @staticmethod
     def resetDrive():
+        """
+        Downloads and decrypts all files from the drive, and saves them to admin's folder. Deletes all files on the drive, changes the symmetric key and in turn, key of all users, and re-encrypts all donwloaded files using the new key
+
+        return: None
+        """
 
         # init two main instances
         kms = KMS()
