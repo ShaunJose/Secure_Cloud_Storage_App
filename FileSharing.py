@@ -18,7 +18,6 @@ class GoogleDriveAccess:
         self.googleAuth.LocalWebserverAuth() # ask user to complete auth, if not already completed
         self.drive = GoogleDrive(self.googleAuth) # init drive obj
         # Create user-files folder here, where all the user's files would be saved (if it doesn't already exist)
-        # TODO: change USER_FILES_FOLDER to self.user_folder = username_files
         self.user_folder = username + "_files"
         if not os.path.isdir(self.user_folder):
             os.mkdir(self.user_folder)
@@ -115,7 +114,6 @@ class GoogleDriveAccess:
         saveFile(decryptedFilename, plain_text)
 
         # TODO: maybe open file over here or from caller method
-        # NOTE: Filename wont have encrpyt extension
 
         return decryptedFilename
 
@@ -155,7 +153,6 @@ class GoogleDriveAccess:
 
         folder = self.drive.CreateFile({'title': DRIVE_FOLDER, "mimeType": "application/vnd.google-apps.folder"})
         folder.Upload()
-        # TODO: share folder to people (one by one (use another function that adds only one user), so you can use that function to share the folder to a new member added)
 
         return folder["id"]
 

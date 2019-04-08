@@ -29,7 +29,7 @@ USER_PASS_DELIM = "\n"
 KEY_DELIM = "\n\n\n\n"
 
 # Private key file name for each user
-PRIV_KEY_FILE = "Private_Key"
+PRIV_KEY_FILE = "Private Key"
 
 # Test message for signature verification
 TEST_MSG = b"Just a test message, not like the usual one but not unique either."

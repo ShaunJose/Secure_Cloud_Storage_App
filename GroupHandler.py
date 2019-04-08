@@ -31,6 +31,7 @@ def acceptUser():
             password = raw_input("Password: ")
             if password == (users_pass['passwords'])[index]:
                 print("Login successful!\n")
+                fernet = handle_old_user(username)
                 break
             else:
                 print("Incorrect details. Please try again.\n") # Wrong password
@@ -41,8 +42,8 @@ def acceptUser():
                 users_pass['users'].append(username) # add user details to curr users dict
                 users_pass['passwords'].append(s_password)
                 new_users.remove(username) # not a new user anymore
-                fernet = init_new_user(username)
                 print("Password saved and login successful!\n")
+                fernet = handle_new_user(username)
                 break
             else:
                 print("Passwords don't match. Login failed.\n")
@@ -51,14 +52,14 @@ def acceptUser():
 
 
     GoogleDriveAccess.startSharing(username, fernet)
-    # tmp = KMS()
+    # kms = KMS()
     # driveAccess = GoogleDriveAccess(username)
-    # filename = driveAccess.upload_file("test file 1.jpg", tmp.fernet)
+    # filename = driveAccess.upload_file("test file 1.jpg", kms.fernet)
     # if filename != None:
     #     print("\n\nEncrypted version in: " + filename + " on the drive")
     # else:
     #     print("\n\nUpload failed.")
-    # filename = driveAccess.download_file("test file 1.jpg", tmp.fernet)
+    # filename = driveAccess.download_file("test file 1.jpg", kms.fernet)
     # if filename != None:
     #     print("\n\nDecrypted version in: " + filename)
     # else:
@@ -108,7 +109,7 @@ def _getNewUsers_():
 
 
 # Does the initialisation for the new user
-def init_new_user(username):
+def handle_new_user(username):
     """
     Initialisation of a new user. Creates new folder for user files, generates private and public key and saves serialized private key, and also saves the encrypted symmetric key to user's folder, to be decrypted by the user's private key
 
@@ -117,7 +118,6 @@ def init_new_user(username):
     return: the fernet
     """
 
-    # NOTE: both
     driveAccess = GoogleDriveAccess(username) # This creates a folder for the user, and also gives access to the drive
 
     # key pair generation and verification
@@ -143,18 +143,30 @@ def init_new_user(username):
     # pub_key.verify(signature, message, padding.PSS( mgf = padding.MGF1(hashes.SHA256()), salt_length = padding.PSS.MAX_LENGTH), hashes.SHA256() )
 
     # encrypt (using user's pubkey) and save symmetric key to user's folder
-    tmp = KMS()
-    encrypted_sym_key = pub_key.encrypt(tmp.key, padding.OAEP(mgf = padding.MGF1(algorithm = hashes.SHA256()), algorithm = hashes.SHA256(), label = None))
+    kms = KMS()
+    encrypted_sym_key = pub_key.encrypt(kms.key, padding.OAEP(mgf = padding.MGF1(algorithm = hashes.SHA256()), algorithm = hashes.SHA256(), label = None))
     filepath = folder_name + SHARED_KEY_FILE
     saveFile(filepath, encrypted_sym_key)
 
     # Printing symmetric key and decrypted symmetric key to confirm that the're the exact same #NOTE: delete
-    # print(tmp.key)
+    # print(kms.key)
     # print(priv_key.decrypt(readFile(filepath), padding.OAEP(mgf = padding.MGF1(algorithm = hashes.SHA256()), algorithm = hashes.SHA256(), label = None)))
 
+    # Reading the symmetric from the file and decrypting it
     # NOTE: both
-    sym_key = priv_key.decrypt(readFile(filepath), padding.OAEP(mgf = padding.MGF1(algorithm = hashes.SHA256()), algorithm = hashes.SHA256(), label = None))
+    sym_key = KMS.getKey(username)
+    print(kms.key)
+    print(sym_key)
     fernet = Fernet(sym_key)
 
     return fernet
-    # TODO: create fernet from the key you got and start upload/download
+
+
+# Gets symmetric key, creates a fernet and returns it
+def handle_old_user(username):
+
+    sym_key = KMS.getKey(username) # get sym key
+
+    fernet = Fernet(sym_key) # create a fernet obj
+
+    return fernet

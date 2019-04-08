@@ -3,9 +3,14 @@
 
 # Imports
 import os
-from constants import ADMIN_FOLDER, SHARED_KEY_FILE
+from constants import ADMIN_FOLDER, SHARED_KEY_FILE, PRIV_KEY_FILE
 from FileFunctionalities import readFile, saveFile
 from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives import hashes
 
 
 # key management system class
@@ -29,7 +34,6 @@ class KMS:
             self.key = readFile(ADMIN_FOLDER + "/" + SHARED_KEY_FILE)
             self.fernet = Fernet(self.key) # create fernet obj
         else:
-            # TODO: if it's not admin, do I generate key or get key from admin?
             self.__generate_new_key__()
 
 
@@ -58,13 +62,27 @@ class KMS:
 
         # TODO: Donwload, Re encrypt all files with new key, and upload if any files exist on the drive. Also delete all previous files on drive after downloaded (in group handler class)
 
-    #
-    # # Returns the symmetric key
-    # def getKey(self):
-    #     """
-    #     Returns the symmetric key to the caller
-    #
-    #     return: Symmetric key
-    #     """
-    #
-    #     return self.key
+
+    # Returns the symmetric key of the group
+    @staticmethod
+    def getKey(username):
+        """
+        Returns the symmetric key to the caller
+
+        param username: User's who's folder has to be dealt with and read into
+
+        return: Symmetric key
+        """
+
+        # Read private key of user
+        folder_name = username + "_files/"
+        filepath = folder_name + PRIV_KEY_FILE
+        priv_key = serialization.load_pem_private_key(readFile(filepath), password = None, backend = default_backend())
+
+        #TODO: verification here?
+
+        # Read symmetric key
+        filepath = folder_name + SHARED_KEY_FILE
+        sym_key = priv_key.decrypt(readFile(filepath), padding.OAEP(mgf = padding.MGF1(algorithm = hashes.SHA256()), algorithm = hashes.SHA256(), label = None))
+
+        return sym_key
