@@ -17,6 +17,11 @@ from KeyManagementSystem import KMS
 
 # Accepts a user log in
 def acceptUser():
+    """
+    Accepts a user login, then calls file sharing method to share files
+
+    return: None
+    """
 
     # get current users (with passwords) and new users
     users_pass = _getCurrUsersPass_()
@@ -145,6 +150,13 @@ def handle_new_user(username):
 
 # Gets symmetric key, creates a fernet and returns it
 def handle_old_user(username):
+    """
+    Gets symmetric key using method in KMS. Initialises fernet based on the symmetric key
+
+    param username: username of the old user being handled
+
+    return: fernet
+    """
 
     sym_key = KMS.getKey(username) # get sym key
 
@@ -155,6 +167,13 @@ def handle_old_user(username):
 
 # Saves all the old users in USERS_FILE
 def save_old_users(users_pass):
+    """
+    Saves the old users to the relevant file, in proper format
+
+    param users_pass: Dictionary containg arrays of old users and passwords
+
+    return: None
+    """
 
     # make content using dictionary and delimiters
     content = ""
@@ -168,6 +187,13 @@ def save_old_users(users_pass):
 
 # Saves all the new users to N_USERS_FILE
 def save_new_users(users):
+    """
+    Saves the new users to the relevant file, in proper format
+
+    param users: Array of new users
+
+    return: None
+    """
 
     # make content using array and delimiters
     content = ""

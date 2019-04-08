@@ -81,7 +81,7 @@ class KMS:
             filepath = folder_name + PRIV_KEY_FILE
             priv_key = serialization.load_pem_private_key(readFile(filepath), password = None, backend = default_backend())
 
-            # Read symmetric key
+            # Read and decrypt the encrypted symmetric key
             filepath = folder_name + SHARED_KEY_FILE
             sym_key = priv_key.decrypt(readFile(filepath), padding.OAEP(mgf = padding.MGF1(algorithm = hashes.SHA256()), algorithm = hashes.SHA256(), label = None))
         else: # if it's the admin, it's already stored in plaintext

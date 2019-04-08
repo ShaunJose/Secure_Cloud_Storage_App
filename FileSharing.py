@@ -113,8 +113,6 @@ class GoogleDriveAccess:
         decryptedFilename = filename[ : -len(ENCR_EXTENSION)]
         saveFile(decryptedFilename, plain_text)
 
-        # TODO: maybe open file over here or from caller method
-
         return decryptedFilename
 
         return None
@@ -208,6 +206,16 @@ class GoogleDriveAccess:
     # Simulates file sharing for a user
     @staticmethod
     def startSharing(username, fernet, users_pass, new_users):
+        """
+        Allows a user to upload or donwload files. Is user is admin, also allows user to add or remove users from the group
+
+        param username: username of user uploading/downloading files
+        fernet: fernet of symmetric key of group
+        users_pass: Dictionary of old users and their passwords
+        new_users: An array of the uninitialised new users
+
+        return: None
+        """
 
         GoogleDriveAccess.printInstructions(username == "admin") #print instructions to the user
 
